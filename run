@@ -1,0 +1,12 @@
+#!/bin/bash
+
+NAME=${PWD##*docker-}
+IMAGE_NAME=yokogawa/${NAME}
+docker rm ${NAME}
+
+set -x
+if [ "${1}" = "bash" ]; then
+    docker run -v ${PWD}:/work -v /var/run/docker.sock:/var/run/docker.sock -i -t --name=${NAME} --entrypoint=/bin/bash ${IMAGE_NAME}
+else
+    docker run -d -v ${PWD}:/work -v /var/run/docker.sock:/var/run/docker.sock -w /work --name=${NAME} ${IMAGE_NAME} $@
+fi
